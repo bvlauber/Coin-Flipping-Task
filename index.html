@@ -1,242 +1,240 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.4">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Economic Decision Task</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; background-color: #f0f0f0; }
+        #experiment-container { width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
+        
+        .screen { display: none; text-align: center; width: 80%; max-width: 800px; }
+        .active { display: block; }
+
+        /* Welcome Screen Styling */
+        input[type="text"] { padding: 12px; font-size: 1.1rem; margin: 15px; border-radius: 6px; border: 1px solid #ccc; width: 250px; }
+        button.start-btn { padding: 15px 35px; font-size: 1.2rem; background: #2c3e50; color: white; border: none; border-radius: 6px; cursor: pointer; transition: background 0.3s; }
+        button.start-btn:hover { background: #34495e; }
+
+        /* Task Screen Styling */
+        #task-canvas { background: #fff; border: 3px solid #333; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        
+        /* The Earnings Box - Now visible upon experiment start */
+        #earnings-box { 
+            display: none; 
+            position: absolute; 
+            top: 20px; 
+            right: 20px; 
+            padding: 15px 25px; 
+            background: #ffffff; 
+            border: 3px solid #2c3e50; 
+            border-radius: 10px; 
+            font-weight: bold; 
+            font-size: 1.4rem; 
+            color: #2c3e50;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+        }
+
+        #instruction-text { font-size: 1.3rem; margin-bottom: 25px; min-height: 3.5em; color: #333; line-height: 1.4; }
+
+        /* Survey Screen Styling */
+        .likert-container { display: flex; justify-content: space-around; margin-top: 35px; }
+        .likert-btn { padding: 20px; width: 65px; height: 65px; font-size: 1.5rem; border-radius: 50%; border: 2px solid #2c3e50; background: white; cursor: pointer; transition: 0.2s; }
+        .likert-btn:hover { background: #2c3e50; color: white; }
+        .label-row { display: flex; justify-content: space-between; margin-top: 15px; font-style: italic; color: #555; padding: 0 10px; }
+    </style>
 </head>
 <body>
-<p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html lang="en"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Economic Decision Task&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: sans-serif; overflow: hidden; background-color: #f0f0f0; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#experiment-container { width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>.screen { display: none; text-align: center; width: 80%; max-width: 800px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.active { display: block; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>/* Welcome Screen */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>input[type="text"] { padding: 10px; font-size: 1.2rem; margin: 10px; border-radius: 5px; border: 1px solid #ccc; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>button.start-btn { padding: 15px 30px; font-size: 1.2rem; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>/* Task Screen */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#task-canvas { background: #fff; border: 2px solid #333; cursor: pointer; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#earnings-box { position: absolute; top: 20px; right: 20px; padding: 15px; background: white; border: 2px solid #2c3e50; border-radius: 8px; font-weight: bold; font-size: 1.2rem; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>#instruction-text { font-size: 1.3rem; margin-bottom: 20px; min-height: 3em; color: #333; }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>/* Survey Screen */</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.likert-container { display: flex; justify-content: space-around; margin-top: 30px; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.likert-btn { padding: 20px; width: 60px; height: 60px; font-size: 1.5rem; border-radius: 50%; border: 2px solid #007bff; background: white; cursor: pointer; transition: 0.2s; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.likert-btn:hover { background: #007bff; color: white; }</p>
-<p class="p1"><span class="Apple-converted-space">        </span>.label-row { display: flex; justify-content: space-between; margin-top: 10px; font-style: italic; color: #666; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;div id="experiment-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="earnings-box" class="hidden-screen"&gt;Earnings: $0&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="screen-welcome" class="screen active"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h1&gt;Welcome to the Decision Task&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Your goal is to earn as much money as possible throughout the task by flipping different coins.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;input type="text" id="p-id" placeholder="Enter Participant ID"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;br&gt;&lt;br&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;button class="start-btn" onclick="startExperiment()"&gt;Start Task&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="screen-task" class="screen"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div id="instruction-text"&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;canvas id="task-canvas" width="800" height="400"&gt;&lt;/canvas&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Trial: &lt;span id="trial-count"&gt;1&lt;/span&gt; / 20&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="screen-survey" class="screen"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h2&gt;Task Complete!&lt;/h2&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;How much money did you make compared to your expectations?&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="likert-container"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="likert-btn" onclick="submitFinalData(1)"&gt;1&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="likert-btn" onclick="submitFinalData(2)"&gt;2&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="likert-btn" onclick="submitFinalData(3)"&gt;3&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="likert-btn" onclick="submitFinalData(4)"&gt;4&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="likert-btn" onclick="submitFinalData(5)"&gt;5&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="label-row"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span&gt;Much less than expected&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span&gt;Much more than expected&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="screen-thanks" class="screen"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;h1&gt;Thank you for your participation!&lt;/h1&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;p&gt;Your data has been successfully recorded.&lt;/p&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1">&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzUDnQ_MlcJ_etBMj7017WELSsAQUTtGn9Ma0hUB9xWbtGtvfQcLlKj3O70KIiEcqw/exec";</p>
-<p class="p2"><span class="Apple-converted-space">    </span></p>
-<p class="p1"><span class="Apple-converted-space">    </span>// Experiment State</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let state = {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>participantId: "",</p>
-<p class="p1"><span class="Apple-converted-space">        </span>framing: "",</p>
-<p class="p1"><span class="Apple-converted-space">        </span>totalEarnings: 0,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>trialsCompleted: 0,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>redWhiteChoices: 0,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>blackGoldChoices: 0,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>isFlipping: false</p>
-<p class="p1"><span class="Apple-converted-space">    </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>const canvas = document.getElementById('task-canvas');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>const ctx = canvas.getContext('2d');</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function startExperiment() {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const idInput = document.getElementById('p-id').value.trim();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>state.participantId = idInput || "USR-" + Math.random().toString(36).substring(2, 8).toUpperCase();</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Assign Framing</p>
-<p class="p1"><span class="Apple-converted-space">        </span>state.framing = Math.random() &lt; 0.5 ? "Positive" : "Negative";</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Set Instructions</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const instr = document.getElementById('instruction-text');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (state.framing === "Positive") {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>instr.innerText = "There is a 40% chance the coin will land on red and you will earn $15. If the coin lands on white, you will lose $7.";</p>
-<p class="p1"><span class="Apple-converted-space">        </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>instr.innerText = "There is a 60% chance the coin will land on white and you will lose $7. If the coin lands on red, you will earn $15.";</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>showScreen('screen-task');</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('earnings-box').style.display = 'block';</p>
-<p class="p1"><span class="Apple-converted-space">        </span>drawCoins("initial");</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function showScreen(id) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.querySelectorAll('.screen').forEach(s =&gt; s.classList.remove('active'));</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById(id).classList.add('active');</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function drawCoins(resultType, colorA = null, colorB = null) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.clearRect(0, 0, canvas.width, canvas.height);</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Coin 1 (Red/White)</p>
-<p class="p1"><span class="Apple-converted-space">        </span>drawCoinShape(200, 200, colorA || "#e74c3c", "Red / White");</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Coin 2 (Black/Gold)</p>
-<p class="p1"><span class="Apple-converted-space">        </span>drawCoinShape(600, 200, colorB || "#2c3e50", "Black / Gold");</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function drawCoinShape(x, y, color, label) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.beginPath();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.arc(x, y, 70, 0, Math.PI * 2);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.fillStyle = color;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.fill();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.strokeStyle = "#333";</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.lineWidth = 5;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.stroke();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.closePath();</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.fillStyle = (color === "#ffffff" || color === "#f1c40f") ? "#000" : "#fff";</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.font = "bold 14px Arial";</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.textAlign = "center";</p>
-<p class="p1"><span class="Apple-converted-space">        </span>ctx.fillText(label, x, y + 5);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>canvas.addEventListener('click', (e) =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (state.isFlipping || state.trialsCompleted &gt;= 20) return;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const rect = canvas.getBoundingClientRect();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const x = e.clientX - rect.left;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>const y = e.clientY - rect.top;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Check if Red/White Coin Clicked (Left)</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (Math.sqrt((x-200)**2 + (y-200)**2) &lt; 70) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>handleFlip("RW");</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}<span class="Apple-converted-space"> </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Check if Black/Gold Coin Clicked (Right)</p>
-<p class="p1"><span class="Apple-converted-space">        </span>else if (Math.sqrt((x-600)**2 + (y-600)**2) &lt; 70) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>handleFlip("BG");</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function handleFlip(choice) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>state.isFlipping = true;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let win = Math.random() &lt; 0.40; // 40% chance to win ($15), 60% to lose ($7)</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>let resultColor;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (choice === "RW") {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>state.redWhiteChoices++;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>resultColor = win ? "#e74c3c" : "#ffffff"; // Red or White</p>
-<p class="p1"><span class="Apple-converted-space">        </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>state.blackGoldChoices++;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>resultColor = win ? "#f1c40f" : "#2c3e50"; // Gold or Black</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Simple visual feedback</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let counter = 0;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let anim = setInterval(() =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>drawCoins("flipping", counter % 2 ? "#ccc" : "#999", counter % 2 ? "#999" : "#ccc");</p>
-<p class="p1"><span class="Apple-converted-space">            </span>counter++;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>if (counter &gt; 6) {</p>
-<p class="p1"><span class="Apple-converted-space">                </span>clearInterval(anim);</p>
-<p class="p1"><span class="Apple-converted-space">                </span>finishFlip(win, choice, resultColor);</p>
-<p class="p1"><span class="Apple-converted-space">            </span>}</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}, 100);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function finishFlip(win, choice, resultColor) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (win) state.totalEarnings += 15;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>else state.totalEarnings -= 7;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>state.trialsCompleted++;</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Update Canvas with Result</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (choice === "RW") drawCoins("result", resultColor, "#2c3e50");</p>
-<p class="p1"><span class="Apple-converted-space">        </span>else drawCoins("result", "#e74c3c", resultColor);</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Update UI</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('earnings-box').innerText = `Earnings: $${state.totalEarnings}`;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('trial-count').innerText = state.trialsCompleted;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>state.isFlipping = false;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (state.trialsCompleted &gt;= 20) {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>setTimeout(() =&gt; showScreen('screen-survey'), 1000);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function submitFinalData(rating) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>showScreen('screen-thanks');</p>
-<p class="p2"><span class="Apple-converted-space">        </span></p>
-<p class="p1"><span class="Apple-converted-space">        </span>const payload = {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>Participant_ID: state.participantId,</p>
-<p class="p1"><span class="Apple-converted-space">            </span>Framing: state.framing,</p>
-<p class="p1"><span class="Apple-converted-space">            </span>Red_Chosen: state.redWhiteChoices, // "Times Red is Chosen" in your script</p>
-<p class="p1"><span class="Apple-converted-space">            </span>Black_Chosen: state.blackGoldChoices, // "Times Black is Chosen" in your script</p>
-<p class="p1"><span class="Apple-converted-space">            </span>Final_Earnings: state.totalEarnings,</p>
-<p class="p1"><span class="Apple-converted-space">            </span>Rating: rating</p>
-<p class="p1"><span class="Apple-converted-space">        </span>};</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>// Send to Google Sheets</p>
-<p class="p1"><span class="Apple-converted-space">        </span>fetch(WEB_APP_URL, {</p>
-<p class="p1"><span class="Apple-converted-space">            </span>method: 'POST',</p>
-<p class="p1"><span class="Apple-converted-space">            </span>mode: 'no-cors', // Critical for Apps Script Cross-Origin</p>
-<p class="p1"><span class="Apple-converted-space">            </span>cache: 'no-cache',</p>
-<p class="p1"><span class="Apple-converted-space">            </span>headers: { 'Content-Type': 'application/json' },</p>
-<p class="p1"><span class="Apple-converted-space">            </span>body: JSON.stringify(payload)</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}).catch(err =&gt; console.error("Post Error:", err));</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1">&lt;/script&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+
+<div id="experiment-container">
+    <div id="earnings-box">Earnings: $0</div>
+
+    <div id="screen-welcome" class="screen active">
+        <h1>Welcome to the Decision Task</h1>
+        <p>Your goal is to earn as much money as possible throughout the task by flipping different coins.</p>
+        <input type="text" id="p-id" placeholder="Enter Participant ID (Optional)">
+        <br><br>
+        <button class="start-btn" onclick="startExperiment()">Start Task</button>
+    </div>
+
+    <div id="screen-task" class="screen">
+        <div id="instruction-text"></div>
+        <canvas id="task-canvas" width="800" height="400"></canvas>
+        <p style="font-weight: bold; font-size: 1.1rem; color: #555;">Trial: <span id="trial-count">1</span> / 20</p>
+    </div>
+
+    <div id="screen-survey" class="screen">
+        <h2>Task Complete!</h2>
+        <p>How much money did you make compared to your expectations?</p>
+        <div class="likert-container">
+            <button class="likert-btn" onclick="submitFinalData(1)">1</button>
+            <button class="likert-btn" onclick="submitFinalData(2)">2</button>
+            <button class="likert-btn" onclick="submitFinalData(3)">3</button>
+            <button class="likert-btn" onclick="submitFinalData(4)">4</button>
+            <button class="likert-btn" onclick="submitFinalData(5)">5</button>
+        </div>
+        <div class="label-row">
+            <span>Much less than expected</span>
+            <span>Much more than expected</span>
+        </div>
+    </div>
+
+    <div id="screen-thanks" class="screen">
+        <h1>Thank you for your participation!</h1>
+        <p>Your data has been successfully recorded and the task is complete.</p>
+    </div>
+</div>
+
+<script>
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzUDnQ_MlcJ_etBMj7017WELSsAQUTtGn9Ma0hUB9xWbtGtvfQcLlKj3O70KIiEcqw/exec";
+    
+    let state = {
+        participantId: "",
+        framing: "",
+        totalEarnings: 0,
+        trialsCompleted: 0,
+        redWhiteChoices: 0,
+        blackGoldChoices: 0,
+        isFlipping: false
+    };
+
+    const canvas = document.getElementById('task-canvas');
+    const ctx = canvas.getContext('2d');
+
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function startExperiment() {
+        // Handle ID
+        const idInput = document.getElementById('p-id').value.trim();
+        state.participantId = idInput || "ID-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+        
+        // Randomly Assign Framing
+        state.framing = Math.random() < 0.5 ? "Positive" : "Negative";
+        
+        // UI Updates
+        const instr = document.getElementById('instruction-text');
+        if (state.framing === "Positive") {
+            instr.innerText = "There is a 40% chance the coin will land on red and you will earn $15. If the coin lands on white, you will lose $7.";
+        } else {
+            instr.innerText = "There is a 60% chance the coin will land on white and you will lose $7. If the coin lands on red, you will earn $15.";
+        }
+
+        document.getElementById('earnings-box').style.display = 'block';
+        showScreen('screen-task');
+        drawCoins("initial");
+    }
+
+    function drawCoinShape(x, y, color, label) {
+        ctx.beginPath();
+        ctx.arc(x, y, 75, 0, Math.PI * 2);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.strokeStyle = "#333";
+        ctx.lineWidth = 4;
+        ctx.stroke();
+        ctx.closePath();
+        
+        // Dynamic text color for visibility
+        ctx.fillStyle = (color === "#ffffff" || color === "#f1c40f") ? "#000" : "#fff";
+        ctx.font = "bold 16px Arial";
+        ctx.textAlign = "center";
+        ctx.fillText(label, x, y + 6);
+    }
+
+    function drawCoins(resultType, colorA = null, colorB = null) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawCoinShape(200, 200, colorA || "#e74c3c", "Red / White");
+        drawCoinShape(600, 200, colorB || "#2c3e50", "Black / Gold");
+    }
+
+    canvas.addEventListener('click', (e) => {
+        if (state.isFlipping || state.trialsCompleted >= 20) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        // Click detection for coins
+        if (Math.sqrt((x-200)**2 + (y-200)**2) < 75) {
+            handleFlip("RW");
+        } else if (Math.sqrt((x-600)**2 + (y-600)**2) < 75) {
+            handleFlip("BG");
+        }
+    });
+
+    function handleFlip(choice) {
+        state.isFlipping = true;
+        let win = Math.random() < 0.40; // Both coins have 40% win chance
+        
+        let resultColor;
+        if (choice === "RW") {
+            state.redWhiteChoices++;
+            resultColor = win ? "#e74c3c" : "#ffffff";
+        } else {
+            state.blackGoldChoices++;
+            resultColor = win ? "#f1c40f" : "#2c3e50";
+        }
+
+        // Quick flip animation
+        let count = 0;
+        let anim = setInterval(() => {
+            drawCoins("flipping", count % 2 ? "#ddd" : "#bbb", count % 2 ? "#bbb" : "#ddd");
+            count++;
+            if (count > 6) {
+                clearInterval(anim);
+                finishFlip(win, choice, resultColor);
+            }
+        }, 100);
+    }
+
+    function finishFlip(win, choice, resultColor) {
+        if (win) state.totalEarnings += 15;
+        else state.totalEarnings -= 7;
+
+        state.trialsCompleted++;
+        
+        // Show result on canvas
+        if (choice === "RW") drawCoins("res", resultColor, "#2c3e50");
+        else drawCoins("res", "#e74c3c", resultColor);
+
+        // Update display
+        document.getElementById('earnings-box').innerText = `Earnings: $${state.totalEarnings}`;
+        document.getElementById('trial-count').innerText = state.trialsCompleted;
+
+        state.isFlipping = false;
+
+        if (state.trialsCompleted >= 20) {
+            setTimeout(() => {
+                document.getElementById('earnings-box').style.display = 'none';
+                showScreen('screen-survey');
+            }, 1200);
+        }
+    }
+
+    function submitFinalData(rating) {
+        showScreen('screen-thanks');
+        
+        const payload = {
+            Participant_ID: state.participantId,
+            Framing: state.framing,
+            Red_Chosen: state.redWhiteChoices,
+            Black_Chosen: state.blackGoldChoices,
+            Final_Earnings: state.totalEarnings,
+            Rating: rating
+        };
+
+        fetch(WEB_APP_URL, {
+            method: 'POST',
+            mode: 'no-cors', 
+            cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).catch(err => console.error("Data submission failed:", err));
+    }
+</script>
+
 </body>
 </html>
