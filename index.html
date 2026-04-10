@@ -17,19 +17,20 @@
         button:hover { background: #353b48; transform: translateY(-2px); }
 
         /* Task Layout */
-        #canvas-outer { position: relative; padding-top: 100px; }
+        #canvas-outer { position: relative; padding-top: 120px; }
         
         .prob-label {
             position: absolute;
-            width: 250px;
-            font-size: 1.2rem;
+            width: 300px;
+            font-size: 1.1rem;
             font-weight: 700;
             color: #2f3640;
             text-align: center;
-            top: 20px;
+            top: 10px;
+            line-height: 1.4;
         }
-        #label-left { left: 75px; }
-        #label-right { left: 475px; }
+        #label-left { left: 50px; }
+        #label-right { left: 450px; }
 
         #task-canvas { background: transparent; cursor: pointer; }
         
@@ -62,7 +63,7 @@
 
     <div id="screen-welcome" class="screen active">
         <h1>Economic Choice Task</h1>
-        <p>Goal: Earn as much as possible by choosing which coin to flip.</p>
+        <p>Your goal is to maximize your earnings by choosing a coin to flip.</p>
         <input type="text" id="p-id" placeholder="Enter Participant ID">
         <br><br>
         <button onclick="startExperiment()">Start Task</button>
@@ -119,9 +120,9 @@
         
         const leftLabel = document.getElementById('label-left');
         if (state.framing === "Positive") {
-            leftLabel.innerHTML = "40% Chance to win $15";
+            leftLabel.innerHTML = "40% Chance to win $15.<br>You could also lose $7.";
         } else {
-            leftLabel.innerHTML = "60% Chance to lose $7";
+            leftLabel.innerHTML = "60% Chance to lose $7.<br>You could also win $15.";
         }
 
         document.getElementById('earnings-box').style.display = 'block';
@@ -150,7 +151,6 @@
         ctx.lineWidth = 2;
         ctx.stroke();
 
-        // Text visibility adjustment
         ctx.fillStyle = (color === "#ffffff" || color === "#fbc531") ? "#2f3640" : "#ffffff";
         ctx.font = "900 16px Arial";
         ctx.textAlign = "center";
@@ -169,41 +169,45 @@
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
-        if (Math.sqrt((x-200)**2 + (y-200)**2) < 75) {
+        // Detection for separate selections
+        const distLeft = Math.sqrt((x-200)**2 + (y-200)**2);
+        const distRight = Math.sqrt((x-600)**2 + (y-600)**2);
+
+        if (distLeft < 75) {
             handleFlip("RW");
         } 
-        else if (Math.sqrt((x-600)**2 + (y-600)**2) < 75) {
+        else if (distRight < 75) {
             handleFlip("BG");
         }
     });
 
     function handleFlip(choice) {
         state.isFlipping = true;
-        const win = Math.random() < 0.40;
+        const win = Math.random() < 0.40; // Hidden 40% win / 60% lose for both
         
         let frames = 0;
         let anim = setInterval(() => {
-            // Animation flickers between generic metallic shades
+            // Rapid color shift to simulate a spin
             state.currentLeftColor = frames % 2 ? "#bdc3c7" : "#7f8c8d";
             state.currentRightColor = frames % 2 ? "#7f8c8d" : "#bdc3c7";
             drawCoins();
             
-            if (++frames > 12) {
+            if (++frames > 14) {
                 clearInterval(anim);
                 
                 if (choice === "RW") {
                     state.redWhiteChoices++;
                     state.currentLeftColor = win ? "#e84118" : "#ffffff";
-                    state.currentRightColor = "#7f8c8d"; // Reset other
+                    state.currentRightColor = "#7f8c8d"; // Reset the other coin
                 } else {
                     state.blackGoldChoices++;
                     state.currentRightColor = win ? "#fbc531" : "#1e272e";
-                    state.currentLeftColor = "#7f8c8d"; // Reset other
+                    state.currentLeftColor = "#7f8c8d"; // Reset the other coin
                 }
                 
                 applyResult(win);
             }
-        }, 60);
+        }, 50);
     }
 
     function applyResult(win) {
