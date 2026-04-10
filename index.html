@@ -20,30 +20,42 @@
         
         .prob-label {
             position: absolute;
-            width: 320px;
-            font-size: 1.15rem;
+            width: 340px;
+            font-size: 1.2rem;
             font-weight: 800;
             text-align: center;
-            top: 0px;
+            top: -20px;
             line-height: 1.4;
             pointer-events: none;
             padding: 10px;
-            border-radius: 10px;
         }
 
-        /* Specific styling to link the text to the Red/White coin */
+        /* The "Connector" Line */
+        .prob-label::after {
+            content: "";
+            position: absolute;
+            bottom: -80px;
+            left: 50%;
+            width: 4px;
+            height: 70px;
+            background: rgba(0,0,0,0.15);
+            transform: translateX(-50%);
+        }
+
         #label-left { 
-            left: 40px; 
-            color: #c23616; /* Deep Red */
-            border-bottom: 4px solid #c23616; /* Visual "underline" connector */
-            background: rgba(255,255,255,0.4);
+            left: 30px; 
+            color: #c23616; 
+            border-bottom: 4px solid #c23616;
+            background: rgba(255,255,255,0.5);
+            border-radius: 8px;
         }
 
         #label-right { 
-            left: 440px; 
+            left: 430px; 
             color: #2f3640; 
             border-bottom: 4px solid #7f8c8d;
-            background: rgba(255,255,255,0.4);
+            background: rgba(255,255,255,0.5);
+            border-radius: 8px;
         }
 
         #task-canvas { background: transparent; cursor: pointer; }
@@ -65,7 +77,7 @@
 
         .likert-container { display: flex; justify-content: space-around; margin-top: 40px; }
         .likert-btn { 
-            padding: 0; width: 80px; height: 80px; font-size: 1.8rem; font-weight: bold;
+            width: 80px; height: 80px; font-size: 1.8rem; font-weight: bold;
             border-radius: 50%; border: 4px solid #2f3640; background-color: #ffffff; 
             color: #2f3640; cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: all 0.2s ease;
@@ -81,7 +93,7 @@
 
     <div id="screen-welcome" class="screen active">
         <h1>Economic Choice Task</h1>
-        <p>Your goal is to maximize your earnings by choosing a coin to flip.</p>
+        <p>Goal: Earn as much as possible by choosing a coin to flip.</p>
         <input type="text" id="p-id" placeholder="Enter Participant ID">
         <br><br>
         <button onclick="startExperiment()">Start Task</button>
@@ -115,7 +127,8 @@
 </div>
 
 <script>
-    const WEB_APP_URL = "REPLACE_WITH_YOUR_NEW_DEPLOY_URL"; // Don't forget to update this!
+    // MAKE SURE TO UPDATE THIS URL WITH YOUR GOOGLE APPS SCRIPT LINK
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzUDnQ_MlcJ_etBMj7017WELSsAQUTtGn9Ma0hUB9xWbtGtvfQcLlKj3O70KIiEcqw/exec";
     
     let state = {
         participantId: "",
@@ -138,9 +151,9 @@
         
         const leftLabel = document.getElementById('label-left');
         if (state.framing === "Positive") {
-            leftLabel.innerHTML = "40% Chance to win $15.<br><small style='color:#555'>You could also lose $7.</small>";
+            leftLabel.innerHTML = "Red (40% chance) - Win $15<br>White - Lose $7";
         } else {
-            leftLabel.innerHTML = "60% Chance to lose $7.<br><small style='color:#555'>You could also win $15.</small>";
+            leftLabel.innerHTML = "White (60% chance) - Lose $7<br>Red - Earn $15";
         }
 
         document.getElementById('earnings-box').style.display = 'block';
