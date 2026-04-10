@@ -5,43 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Economic Decision Task</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; background-color: #f0f0f0; }
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; overflow: hidden; background-color: #dcdde1; }
         #experiment-container { width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
         
-        .screen { display: none; text-align: center; width: 80%; max-width: 800px; }
+        .screen { display: none; text-align: center; width: 90%; max-width: 900px; }
         .active { display: block; }
 
-        /* Welcome Screen Styling */
-        input[type="text"] { padding: 12px; font-size: 1.1rem; margin: 15px; border-radius: 6px; border: 1px solid #ccc; width: 250px; }
-        button.start-btn { padding: 15px 35px; font-size: 1.2rem; background: #2c3e50; color: white; border: none; border-radius: 6px; cursor: pointer; transition: background 0.3s; }
-        button.start-btn:hover { background: #34495e; }
+        /* Welcome Screen */
+        input[type="text"] { padding: 12px; font-size: 1.1rem; margin: 15px; border-radius: 8px; border: 1px solid #bdc3c7; width: 260px; outline: none; }
+        button { padding: 15px 40px; font-size: 1.2rem; background: #2f3640; color: white; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        button:hover { background: #353b48; transform: translateY(-2px); }
 
-        /* Task Screen Styling */
-        #task-canvas { background: #fff; border: 3px solid #333; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        /* Task Layout */
+        #canvas-outer { position: relative; padding-top: 80px; }
+        #instruction-bubble { 
+            position: absolute; 
+            top: 0; 
+            left: 50px; 
+            width: 300px; 
+            font-size: 1.1rem; 
+            font-weight: 600; 
+            color: #2f3640; 
+            line-height: 1.3;
+            text-align: center;
+            background: rgba(255,255,255,0.8);
+            padding: 10px;
+            border-radius: 12px;
+            border: 2px solid #7f8c8d;
+        }
+
+        #task-canvas { background: transparent; cursor: pointer; }
         
-        /* The Earnings Box - Now visible upon experiment start */
         #earnings-box { 
             display: none; 
             position: absolute; 
-            top: 20px; 
-            right: 20px; 
-            padding: 15px 25px; 
-            background: #ffffff; 
-            border: 3px solid #2c3e50; 
-            border-radius: 10px; 
-            font-weight: bold; 
-            font-size: 1.4rem; 
-            color: #2c3e50;
-            box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
+            top: 30px; 
+            right: 30px; 
+            padding: 15px 30px; 
+            background: #fbc531; 
+            border: 4px solid #e1b12c; 
+            border-radius: 15px; 
+            font-weight: 900; 
+            font-size: 1.6rem; 
+            color: #2f3640;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
 
-        #instruction-text { font-size: 1.3rem; margin-bottom: 25px; min-height: 3.5em; color: #333; line-height: 1.4; }
-
-        /* Survey Screen Styling */
-        .likert-container { display: flex; justify-content: space-around; margin-top: 35px; }
-        .likert-btn { padding: 20px; width: 65px; height: 65px; font-size: 1.5rem; border-radius: 50%; border: 2px solid #2c3e50; background: white; cursor: pointer; transition: 0.2s; }
-        .likert-btn:hover { background: #2c3e50; color: white; }
-        .label-row { display: flex; justify-content: space-between; margin-top: 15px; font-style: italic; color: #555; padding: 0 10px; }
+        /* Survey */
+        .likert-container { display: flex; justify-content: space-around; margin-top: 40px; }
+        .likert-btn { padding: 20px; width: 70px; height: 70px; font-size: 1.6rem; border-radius: 50%; border: 3px solid #2f3640; background: white; cursor: pointer; transition: 0.2s; }
+        .likert-btn:hover { background: #2f3640; color: white; }
+        .label-row { display: flex; justify-content: space-between; margin-top: 20px; font-weight: bold; color: #7f8c8d; }
     </style>
 </head>
 <body>
@@ -50,21 +64,22 @@
     <div id="earnings-box">Earnings: $0</div>
 
     <div id="screen-welcome" class="screen active">
-        <h1>Welcome to the Decision Task</h1>
-        <p>Your goal is to earn as much money as possible throughout the task by flipping different coins.</p>
-        <input type="text" id="p-id" placeholder="Enter Participant ID (Optional)">
+        <h1>Economic Choice Task</h1>
+        <p>Your goal is to maximize your earnings by choosing which coin to flip.</p>
+        <input type="text" id="p-id" placeholder="Enter Participant ID">
         <br><br>
-        <button class="start-btn" onclick="startExperiment()">Start Task</button>
+        <button onclick="startExperiment()">Start Task</button>
     </div>
 
     <div id="screen-task" class="screen">
-        <div id="instruction-text"></div>
-        <canvas id="task-canvas" width="800" height="400"></canvas>
-        <p style="font-weight: bold; font-size: 1.1rem; color: #555;">Trial: <span id="trial-count">1</span> / 20</p>
+        <div id="canvas-outer">
+            <div id="instruction-bubble"></div>
+            <canvas id="task-canvas" width="800" height="400"></canvas>
+        </div>
     </div>
 
     <div id="screen-survey" class="screen">
-        <h2>Task Complete!</h2>
+        <h2>Process Complete</h2>
         <p>How much money did you make compared to your expectations?</p>
         <div class="likert-container">
             <button class="likert-btn" onclick="submitFinalData(1)">1</button>
@@ -73,15 +88,12 @@
             <button class="likert-btn" onclick="submitFinalData(4)">4</button>
             <button class="likert-btn" onclick="submitFinalData(5)">5</button>
         </div>
-        <div class="label-row">
-            <span>Much less than expected</span>
-            <span>Much more than expected</span>
-        </div>
+        <div class="label-row"><span>Much less than expected</span><span>Much more than expected</span></div>
     </div>
 
     <div id="screen-thanks" class="screen">
-        <h1>Thank you for your participation!</h1>
-        <p>Your data has been successfully recorded and the task is complete.</p>
+        <h1>Participation Recorded</h1>
+        <p>Thank you for contributing to this research.</p>
     </div>
 </div>
 
@@ -101,140 +113,132 @@
     const canvas = document.getElementById('task-canvas');
     const ctx = canvas.getContext('2d');
 
+    function startExperiment() {
+        state.participantId = document.getElementById('p-id').value.trim() || "ID-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+        state.framing = Math.random() < 0.5 ? "Positive" : "Negative";
+        
+        const instr = document.getElementById('instruction-bubble');
+        instr.innerHTML = state.framing === "Positive" 
+            ? "40% chance Red (+$15)<br>60% chance White (-$7)" 
+            : "60% chance White (-$7)<br>40% chance Red (+$15)";
+
+        document.getElementById('earnings-box').style.display = 'block';
+        showScreen('screen-task');
+        drawCoins();
+    }
+
     function showScreen(id) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
     }
 
-    function startExperiment() {
-        // Handle ID
-        const idInput = document.getElementById('p-id').value.trim();
-        state.participantId = idInput || "ID-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-        
-        // Randomly Assign Framing
-        state.framing = Math.random() < 0.5 ? "Positive" : "Negative";
-        
-        // UI Updates
-        const instr = document.getElementById('instruction-text');
-        if (state.framing === "Positive") {
-            instr.innerText = "There is a 40% chance the coin will land on red and you will earn $15. If the coin lands on white, you will lose $7.";
-        } else {
-            instr.innerText = "There is a 60% chance the coin will land on white and you will lose $7. If the coin lands on red, you will earn $15.";
-        }
+    function drawRealisticCoin(x, y, color1, color2, label) {
+        // Outer Shadow for depth
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = "rgba(0,0,0,0.3)";
+        ctx.shadowOffsetY = 6;
 
-        document.getElementById('earnings-box').style.display = 'block';
-        showScreen('screen-task');
-        drawCoins("initial");
-    }
+        // Metallic Gradient
+        const grad = ctx.createRadialGradient(x-25, y-25, 5, x, y, 75);
+        grad.addColorStop(0, color1); 
+        grad.addColorStop(0.7, color2);
+        grad.addColorStop(1, "#1a1a1a");
 
-    function drawCoinShape(x, y, color, label) {
         ctx.beginPath();
         ctx.arc(x, y, 75, 0, Math.PI * 2);
-        ctx.fillStyle = color;
+        ctx.fillStyle = grad;
         ctx.fill();
-        ctx.strokeStyle = "#333";
+        
+        // Polished Rim
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetY = 0;
+        ctx.strokeStyle = "rgba(255,255,255,0.4)";
         ctx.lineWidth = 4;
         ctx.stroke();
-        ctx.closePath();
-        
-        // Dynamic text color for visibility
-        ctx.fillStyle = (color === "#ffffff" || color === "#f1c40f") ? "#000" : "#fff";
-        ctx.font = "bold 16px Arial";
+
+        // Embossed Label Effect
+        ctx.fillStyle = (color1 === "#ffffff" || color1 === "#fbc531") ? "#2f3640" : "#f5f6fa";
+        ctx.font = "900 16px Arial";
         ctx.textAlign = "center";
         ctx.fillText(label, x, y + 6);
     }
 
-    function drawCoins(resultType, colorA = null, colorB = null) {
+    function drawCoins(resColorA = null, resColorB = null) {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        drawCoinShape(200, 200, colorA || "#e74c3c", "Red / White");
-        drawCoinShape(600, 200, colorB || "#2c3e50", "Black / Gold");
+        // Red/White (Left)
+        drawRealisticCoin(200, 200, resColorA || "#e84118", "#c23616", "RED / WHITE");
+        // Black/Gold (Right)
+        drawRealisticCoin(600, 200, resColorB || "#353b48", "#1e272e", "BLACK / GOLD");
     }
 
     canvas.addEventListener('click', (e) => {
         if (state.isFlipping || state.trialsCompleted >= 20) return;
-
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
-        // Click detection for coins
-        if (Math.sqrt((x-200)**2 + (y-200)**2) < 75) {
-            handleFlip("RW");
-        } else if (Math.sqrt((x-600)**2 + (y-600)**2) < 75) {
-            handleFlip("BG");
-        }
+        if (Math.sqrt((x-200)**2 + (y-200)**2) < 75) handleFlip("RW");
+        else if (Math.sqrt((x-600)**2 + (y-600)**2) < 75) handleFlip("BG");
     });
 
     function handleFlip(choice) {
         state.isFlipping = true;
-        let win = Math.random() < 0.40; // Both coins have 40% win chance
-        
-        let resultColor;
+        const win = Math.random() < 0.40;
+        let resColor;
+
         if (choice === "RW") {
             state.redWhiteChoices++;
-            resultColor = win ? "#e74c3c" : "#ffffff";
+            resColor = win ? "#e84118" : "#ffffff";
         } else {
             state.blackGoldChoices++;
-            resultColor = win ? "#f1c40f" : "#2c3e50";
+            resColor = win ? "#fbc531" : "#1e272e"; // Gold or Deep Black
         }
 
-        // Quick flip animation
-        let count = 0;
+        let frames = 0;
         let anim = setInterval(() => {
-            drawCoins("flipping", count % 2 ? "#ddd" : "#bbb", count % 2 ? "#bbb" : "#ddd");
-            count++;
-            if (count > 6) {
+            // Flicker effect to simulate high-speed flipping
+            drawCoins(frames % 2 ? "#dcdde1" : "#7f8c8d", frames % 2 ? "#7f8c8d" : "#dcdde1");
+            if (++frames > 10) {
                 clearInterval(anim);
-                finishFlip(win, choice, resultColor);
+                applyResult(win, choice, resColor);
             }
-        }, 100);
+        }, 60);
     }
 
-    function finishFlip(win, choice, resultColor) {
-        if (win) state.totalEarnings += 15;
-        else state.totalEarnings -= 7;
-
+    function applyResult(win, choice, resColor) {
+        state.totalEarnings += win ? 15 : -7;
         state.trialsCompleted++;
         
-        // Show result on canvas
-        if (choice === "RW") drawCoins("res", resultColor, "#2c3e50");
-        else drawCoins("res", "#e74c3c", resultColor);
-
-        // Update display
+        // Display result specifically on the coin chosen
+        if (choice === "RW") drawCoins(resColor, "#1e272e");
+        else drawCoins("#e84118", resColor);
+        
         document.getElementById('earnings-box').innerText = `Earnings: $${state.totalEarnings}`;
-        document.getElementById('trial-count').innerText = state.trialsCompleted;
-
         state.isFlipping = false;
 
         if (state.trialsCompleted >= 20) {
             setTimeout(() => {
                 document.getElementById('earnings-box').style.display = 'none';
                 showScreen('screen-survey');
-            }, 1200);
+            }, 1000);
         }
     }
 
     function submitFinalData(rating) {
         showScreen('screen-thanks');
-        
-        const payload = {
-            Participant_ID: state.participantId,
-            Framing: state.framing,
-            Red_Chosen: state.redWhiteChoices,
-            Black_Chosen: state.blackGoldChoices,
-            Final_Earnings: state.totalEarnings,
-            Rating: rating
-        };
-
         fetch(WEB_APP_URL, {
             method: 'POST',
-            mode: 'no-cors', 
-            cache: 'no-cache',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        }).catch(err => console.error("Data submission failed:", err));
+            mode: 'no-cors',
+            body: JSON.stringify({
+                Participant_ID: state.participantId,
+                Framing: state.framing,
+                Red_Chosen: state.redWhiteChoices,
+                Black_Chosen: state.blackGoldChoices,
+                Final_Earnings: state.totalEarnings,
+                Rating: rating
+            })
+        });
     }
 </script>
-
 </body>
 </html>
