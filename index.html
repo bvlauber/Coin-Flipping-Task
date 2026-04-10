@@ -16,21 +16,35 @@
         button:hover { background: #353b48; transform: translateY(-2px); }
 
         /* Task Layout */
-        #canvas-outer { position: relative; padding-top: 120px; }
+        #canvas-outer { position: relative; padding-top: 140px; }
         
         .prob-label {
             position: absolute;
-            width: 300px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #2f3640;
+            width: 320px;
+            font-size: 1.15rem;
+            font-weight: 800;
             text-align: center;
-            top: 10px;
+            top: 0px;
             line-height: 1.4;
-            pointer-events: none; 
+            pointer-events: none;
+            padding: 10px;
+            border-radius: 10px;
         }
-        #label-left { left: 50px; }
-        #label-right { left: 450px; }
+
+        /* Specific styling to link the text to the Red/White coin */
+        #label-left { 
+            left: 40px; 
+            color: #c23616; /* Deep Red */
+            border-bottom: 4px solid #c23616; /* Visual "underline" connector */
+            background: rgba(255,255,255,0.4);
+        }
+
+        #label-right { 
+            left: 440px; 
+            color: #2f3640; 
+            border-bottom: 4px solid #7f8c8d;
+            background: rgba(255,255,255,0.4);
+        }
 
         #task-canvas { background: transparent; cursor: pointer; }
         
@@ -49,26 +63,14 @@
             box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
 
-        /* Likert Scale - Force Visibility */
         .likert-container { display: flex; justify-content: space-around; margin-top: 40px; }
         .likert-btn { 
-            padding: 0;
-            width: 80px; 
-            height: 80px; 
-            font-size: 1.8rem; 
-            font-weight: bold;
-            border-radius: 50%; 
-            border: 4px solid #2f3640; 
-            background-color: #ffffff; 
-            color: #2f3640; /* Force number color to dark grey */
-            cursor: pointer; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 0; width: 80px; height: 80px; font-size: 1.8rem; font-weight: bold;
+            border-radius: 50%; border: 4px solid #2f3640; background-color: #ffffff; 
+            color: #2f3640; cursor: pointer; display: flex; align-items: center; justify-content: center;
             transition: all 0.2s ease;
         }
         .likert-btn:hover { background: #2f3640; color: #ffffff; }
-        
         .label-row { display: flex; justify-content: space-between; margin-top: 20px; font-weight: bold; color: #7f8c8d; }
     </style>
 </head>
@@ -79,7 +81,7 @@
 
     <div id="screen-welcome" class="screen active">
         <h1>Economic Choice Task</h1>
-        <p>Goal: Earn as much as possible by choosing which coin to flip.</p>
+        <p>Your goal is to maximize your earnings by choosing a coin to flip.</p>
         <input type="text" id="p-id" placeholder="Enter Participant ID">
         <br><br>
         <button onclick="startExperiment()">Start Task</button>
@@ -113,7 +115,7 @@
 </div>
 
 <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxsBG_X0-uk1dCUshhdI9h_1eSZ5cdyELQVo1kqOPhAtNIMF8zsqveWStjQuELHgfM/exec";
+    const WEB_APP_URL = "REPLACE_WITH_YOUR_NEW_DEPLOY_URL"; // Don't forget to update this!
     
     let state = {
         participantId: "",
@@ -136,9 +138,9 @@
         
         const leftLabel = document.getElementById('label-left');
         if (state.framing === "Positive") {
-            leftLabel.innerHTML = "40% Chance to win $15.<br>You could also lose $7.";
+            leftLabel.innerHTML = "40% Chance to win $15.<br><small style='color:#555'>You could also lose $7.</small>";
         } else {
-            leftLabel.innerHTML = "60% Chance to lose $7.<br>You could also win $15.";
+            leftLabel.innerHTML = "60% Chance to lose $7.<br><small style='color:#555'>You could also win $15.</small>";
         }
 
         document.getElementById('earnings-box').style.display = 'block';
