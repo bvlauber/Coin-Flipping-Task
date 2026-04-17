@@ -8,21 +8,21 @@
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; overflow: hidden; background-color: #dcdde1; }
         #experiment-container { width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
         
-        .screen { display: none; text-align: center; width: 95%; max-width: 1000px; }
-        .active { display: block; }
+        .screen { display: none; text-align: center; width: 95%; max-width: 1000px; margin: 0 auto; }
+        .active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
         /* Task Description Styling */
         #task-description {
             font-size: 1.1rem;
             color: #2f3640;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             max-width: 800px;
             line-height: 1.5;
             background: rgba(255,255,255,0.5);
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
-            border-left: 5px solid #2f3640;
-            text-align: left;
+            border-top: 5px solid #2f3640;
+            text-align: center; 
         }
 
         input[type="text"] { padding: 12px; font-size: 1.1rem; margin: 15px; border-radius: 8px; border: 1px solid #bdc3c7; width: 260px; outline: none; }
@@ -30,7 +30,7 @@
         button:hover { background: #353b48; transform: translateY(-2px); }
 
         /* Task Layout */
-        #canvas-outer { position: relative; padding-top: 100px; }
+        #canvas-outer { position: relative; margin-bottom: 120px; }
         
         .prob-label {
             position: absolute;
@@ -38,7 +38,7 @@
             font-size: 1.1rem;
             font-weight: 500;
             text-align: center;
-            top: -40px;
+            bottom: -90px; 
             line-height: 1.4;
             pointer-events: none;
             padding: 10px;
@@ -46,14 +46,14 @@
             border-radius: 8px;
         }
 
-        /* Connecting vertical line */
-        .prob-label::after {
+        /* Connecting vertical line (pointing UP to coin) */
+        .prob-label::before {
             content: "";
             position: absolute;
-            bottom: -80px;
+            top: -60px;
             left: 50%;
             width: 2px;
-            height: 70px;
+            height: 60px;
             background: rgba(0,0,0,0.1);
             transform: translateX(-50%);
         }
@@ -84,7 +84,7 @@
 
         .likert-btn { width: 70px; height: 70px; font-size: 1.6rem; font-weight: bold; border-radius: 50%; border: 3px solid #2f3640; background-color: #ffffff; color: #2f3640; cursor: pointer; transition: 0.2s; }
         .likert-btn:hover { background: #2f3640; color: #ffffff; }
-        .label-row { display: flex; justify-content: space-between; margin-top: 20px; font-weight: bold; color: #7f8c8d; width: 100%; }
+        .label-row { display: flex; justify-content: space-between; margin-top: 20px; font-weight: bold; color: #7f8c8d; width: 100%; max-width: 500px; }
     </style>
 </head>
 <body>
@@ -96,26 +96,26 @@
         <h1>Economic Choice Task</h1>
         <p>Enter your ID to begin the session.</p>
         <input type="text" id="p-id" placeholder="Enter Participant ID">
-        <br><br>
+        <br>
         <button onclick="startExperiment()">Start Task</button>
     </div>
 
     <div id="screen-task" class="screen">
         <div id="task-description">
             You are being presented with two coins. The red and white coin has a known probability of landing on each color. 
-            The black and gold coin has an unknown probability. Continue flipping coins until the task is over, and earn as much money as possible.
+            The black and gold coin has an unknown probability. You will have 20 attempts to flip the coins before the task is over, and your goal is to earn as much money as possible.
         </div>
         <div id="canvas-outer">
+            <canvas id="task-canvas" width="800" height="400"></canvas>
             <div id="label-left" class="prob-label"></div>
             <div id="label-right" class="prob-label"></div>
-            <canvas id="task-canvas" width="800" height="400"></canvas>
         </div>
     </div>
 
     <div id="screen-survey" class="screen">
         <h2>Process Complete</h2>
         <p>How much money did you make compared to your expectations?</p>
-        <div style="display: flex; justify-content: space-around; margin-top: 30px;">
+        <div style="display: flex; justify-content: space-around; margin-top: 30px; width: 100%; max-width: 500px;">
             <button class="likert-btn" onclick="submitFinalData(1)">1</button>
             <button class="likert-btn" onclick="submitFinalData(2)">2</button>
             <button class="likert-btn" onclick="submitFinalData(3)">3</button>
@@ -132,7 +132,7 @@
 </div>
 
 <script>
-    // CRITICAL: Replace this with your actual Deployment URL from Google Sheets
+    // CRITICAL: Replace with your actual deployment URL
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzUDnQ_MlcJ_etBMj7017WELSsAQUTtGn9Ma0hUB9xWbtGtvfQcLlKj3O70KIiEcqw/exec";
     
     let state = {
@@ -157,11 +157,10 @@
         const leftLabel = document.getElementById('label-left');
         const rightLabel = document.getElementById('label-right');
 
-        // Text Content Updates
         if (state.framing === "Positive") {
             leftLabel.innerHTML = 'If the coin lands on red, you will <span class="win-highlight">WIN</span> $15 40% of the time.';
         } else {
-            leftLabel.innerHTML = 'If the coin lands on white, you will <span class="lose-highlight">LOOSE</span> $7 60% of the time.';
+            leftLabel.innerHTML = 'If the coin lands on white, you will <span class="lose-highlight">LOSE</span> $7 60% of the time.';
         }
         
         rightLabel.innerHTML = '<span class="unknown-highlight">UNKNOWN</span> Probability';
