@@ -11,7 +11,6 @@
         .screen { display: none; text-align: center; width: 95%; max-width: 1000px; margin: 0 auto; }
         .active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
 
-        /* Task Description Styling */
         #task-description {
             font-size: 1.1rem;
             color: #2f3640;
@@ -25,11 +24,9 @@
             text-align: center; 
         }
 
-        input[type="text"] { padding: 12px; font-size: 1.1rem; margin: 15px; border-radius: 8px; border: 1px solid #bdc3c7; width: 260px; outline: none; }
-        button { padding: 15px 40px; font-size: 1.2rem; background: #2f3640; color: white; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        button { padding: 18px 50px; font-size: 1.3rem; font-weight: bold; background: #2f3640; color: white; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         button:hover { background: #353b48; transform: translateY(-2px); }
 
-        /* Task Layout */
         #canvas-outer { position: relative; margin-bottom: 120px; }
         
         .prob-label {
@@ -46,7 +43,6 @@
             border-radius: 8px;
         }
 
-        /* Connecting vertical line (pointing UP to coin) */
         .prob-label::before {
             content: "";
             position: absolute;
@@ -61,7 +57,6 @@
         #label-left { left: 20px; color: #2f3640; }
         #label-right { left: 420px; color: #2f3640; }
 
-        /* Specific Highlight Colors */
         .win-highlight { color: #c23616; font-weight: 900; }
         .lose-highlight { color: #ffffff; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
         .unknown-highlight { font-weight: 900; }
@@ -94,10 +89,9 @@
 
     <div id="screen-welcome" class="screen active">
         <h1>Economic Choice Task</h1>
-        <p>Enter your ID to begin the session.</p>
-        <input type="text" id="p-id" placeholder="Enter Participant ID">
+        <p>Your unique session ID has been generated.</p>
         <br>
-        <button onclick="startExperiment()">Start Task</button>
+        <button onclick="startExperiment()">Begin Task</button>
     </div>
 
     <div id="screen-task" class="screen">
@@ -132,11 +126,11 @@
 </div>
 
 <script>
-    // CRITICAL: Replace with your actual deployment URL
+    // CRITICAL: Ensure this matches your most recent Google Apps Script Deployment URL
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzUDnQ_MlcJ_etBMj7017WELSsAQUTtGn9Ma0hUB9xWbtGtvfQcLlKj3O70KIiEcqw/exec";
     
     let state = {
-        participantId: "",
+        participantId: "P-" + Math.random().toString(36).substring(2, 10).toUpperCase(), // Auto-generated ID
         framing: "",
         totalEarnings: 0,
         trialsCompleted: 0,
@@ -151,7 +145,7 @@
     const ctx = canvas.getContext('2d');
 
     function startExperiment() {
-        state.participantId = document.getElementById('p-id').value.trim() || "ID-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+        // Framing is assigned here
         state.framing = Math.random() < 0.5 ? "Positive" : "Negative";
         
         const leftLabel = document.getElementById('label-left');
