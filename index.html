@@ -8,82 +8,83 @@
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; overflow: hidden; background-color: #dcdde1; }
         #experiment-container { width: 100vw; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; }
         
-        .screen { display: none; text-align: center; width: 90%; max-width: 900px; }
+        .screen { display: none; text-align: center; width: 95%; max-width: 1000px; }
         .active { display: block; }
+
+        /* Task Description Styling */
+        #task-description {
+            font-size: 1.1rem;
+            color: #2f3640;
+            margin-bottom: 20px;
+            max-width: 800px;
+            line-height: 1.5;
+            background: rgba(255,255,255,0.5);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #2f3640;
+            text-align: left;
+        }
 
         input[type="text"] { padding: 12px; font-size: 1.1rem; margin: 15px; border-radius: 8px; border: 1px solid #bdc3c7; width: 260px; outline: none; }
         button { padding: 15px 40px; font-size: 1.2rem; background: #2f3640; color: white; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         button:hover { background: #353b48; transform: translateY(-2px); }
 
         /* Task Layout */
-        #canvas-outer { position: relative; padding-top: 140px; }
+        #canvas-outer { position: relative; padding-top: 100px; }
         
         .prob-label {
             position: absolute;
-            width: 340px;
-            font-size: 1.2rem;
-            font-weight: 800;
+            width: 360px;
+            font-size: 1.1rem;
+            font-weight: 500;
             text-align: center;
-            top: -20px;
+            top: -40px;
             line-height: 1.4;
             pointer-events: none;
             padding: 10px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 8px;
         }
 
-        /* The "Connector" Line */
+        /* Connecting vertical line */
         .prob-label::after {
             content: "";
             position: absolute;
             bottom: -80px;
             left: 50%;
-            width: 4px;
+            width: 2px;
             height: 70px;
-            background: rgba(0,0,0,0.15);
+            background: rgba(0,0,0,0.1);
             transform: translateX(-50%);
         }
 
-        #label-left { 
-            left: 30px; 
-            color: #c23616; 
-            border-bottom: 4px solid #c23616;
-            background: rgba(255,255,255,0.5);
-            border-radius: 8px;
-        }
+        #label-left { left: 20px; color: #2f3640; }
+        #label-right { left: 420px; color: #2f3640; }
 
-        #label-right { 
-            left: 430px; 
-            color: #2f3640; 
-            border-bottom: 4px solid #7f8c8d;
-            background: rgba(255,255,255,0.5);
-            border-radius: 8px;
-        }
+        /* Specific Highlight Colors */
+        .win-highlight { color: #c23616; font-weight: 900; }
+        .lose-highlight { color: #ffffff; font-weight: 900; text-shadow: 1px 1px 2px rgba(0,0,0,0.5); }
+        .unknown-highlight { font-weight: 900; }
 
         #task-canvas { background: transparent; cursor: pointer; }
         
         #earnings-box { 
             display: none; 
             position: absolute; 
-            top: 30px; 
-            right: 30px; 
-            padding: 15px 30px; 
+            top: 20px; 
+            right: 20px; 
+            padding: 10px 20px; 
             background: #fbc531; 
-            border: 4px solid #e1b12c; 
-            border-radius: 15px; 
+            border: 3px solid #e1b12c; 
+            border-radius: 12px; 
             font-weight: 900; 
-            font-size: 1.6rem; 
+            font-size: 1.4rem; 
             color: #2f3640;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
 
-        .likert-container { display: flex; justify-content: space-around; margin-top: 40px; }
-        .likert-btn { 
-            width: 80px; height: 80px; font-size: 1.8rem; font-weight: bold;
-            border-radius: 50%; border: 4px solid #2f3640; background-color: #ffffff; 
-            color: #2f3640; cursor: pointer; display: flex; align-items: center; justify-content: center;
-            transition: all 0.2s ease;
-        }
+        .likert-btn { width: 70px; height: 70px; font-size: 1.6rem; font-weight: bold; border-radius: 50%; border: 3px solid #2f3640; background-color: #ffffff; color: #2f3640; cursor: pointer; transition: 0.2s; }
         .likert-btn:hover { background: #2f3640; color: #ffffff; }
-        .label-row { display: flex; justify-content: space-between; margin-top: 20px; font-weight: bold; color: #7f8c8d; }
+        .label-row { display: flex; justify-content: space-between; margin-top: 20px; font-weight: bold; color: #7f8c8d; width: 100%; }
     </style>
 </head>
 <body>
@@ -93,16 +94,20 @@
 
     <div id="screen-welcome" class="screen active">
         <h1>Economic Choice Task</h1>
-        <p>Goal: Earn as much as possible by choosing a coin to flip.</p>
+        <p>Enter your ID to begin the session.</p>
         <input type="text" id="p-id" placeholder="Enter Participant ID">
         <br><br>
         <button onclick="startExperiment()">Start Task</button>
     </div>
 
     <div id="screen-task" class="screen">
+        <div id="task-description">
+            You are being presented with two coins. The red and white coin has a known probability of landing on each color. 
+            The black and gold coin has an unknown probability. Continue flipping coins until the task is over, and earn as much money as possible.
+        </div>
         <div id="canvas-outer">
             <div id="label-left" class="prob-label"></div>
-            <div id="label-right" class="prob-label">?</div>
+            <div id="label-right" class="prob-label"></div>
             <canvas id="task-canvas" width="800" height="400"></canvas>
         </div>
     </div>
@@ -110,7 +115,7 @@
     <div id="screen-survey" class="screen">
         <h2>Process Complete</h2>
         <p>How much money did you make compared to your expectations?</p>
-        <div class="likert-container">
+        <div style="display: flex; justify-content: space-around; margin-top: 30px;">
             <button class="likert-btn" onclick="submitFinalData(1)">1</button>
             <button class="likert-btn" onclick="submitFinalData(2)">2</button>
             <button class="likert-btn" onclick="submitFinalData(3)">3</button>
@@ -122,13 +127,13 @@
 
     <div id="screen-thanks" class="screen">
         <h1>Participation Recorded</h1>
-        <p>Thank you for contributing to this research.</p>
+        <p>Thank you for your time.</p>
     </div>
 </div>
 
 <script>
-    // MAKE SURE TO UPDATE THIS URL WITH YOUR GOOGLE APPS SCRIPT LINK
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxaYgzsJyxC74keFjFwqv-iVXugf6luKinwp2vHJeFzr6e7UPnCuMTikXKw18GgqjM/exec";
+    // CRITICAL: Replace this with your actual Deployment URL from Google Sheets
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzUDnQ_MlcJ_etBMj7017WELSsAQUTtGn9Ma0hUB9xWbtGtvfQcLlKj3O70KIiEcqw/exec";
     
     let state = {
         participantId: "",
@@ -150,11 +155,16 @@
         state.framing = Math.random() < 0.5 ? "Positive" : "Negative";
         
         const leftLabel = document.getElementById('label-left');
+        const rightLabel = document.getElementById('label-right');
+
+        // Text Content Updates
         if (state.framing === "Positive") {
-            leftLabel.innerHTML = "Red (40% chance) - Win $15<br>White - Lose $7";
+            leftLabel.innerHTML = 'If the coin lands on red, you will <span class="win-highlight">WIN</span> $15 40% of the time.';
         } else {
-            leftLabel.innerHTML = "White (60% chance) - Lose $7<br>Red - Earn $15";
+            leftLabel.innerHTML = 'If the coin lands on white, you will <span class="lose-highlight">LOOSE</span> $7 60% of the time.';
         }
+        
+        rightLabel.innerHTML = '<span class="unknown-highlight">UNKNOWN</span> Probability';
 
         document.getElementById('earnings-box').style.display = 'block';
         showScreen('screen-task');
@@ -178,13 +188,12 @@
         ctx.fill();
         
         ctx.shadowBlur = 0;
-        ctx.shadowOffsetY = 0;
         ctx.strokeStyle = "rgba(0,0,0,0.1)";
         ctx.lineWidth = 2;
         ctx.stroke();
 
         ctx.fillStyle = (color === "#ffffff" || color === "#fbc531") ? "#2f3640" : "#ffffff";
-        ctx.font = "900 16px Arial";
+        ctx.font = "900 15px Arial";
         ctx.textAlign = "center";
         ctx.fillText(label, x, y + 6);
         ctx.restore();
@@ -198,7 +207,6 @@
 
     canvas.addEventListener('mousedown', function(e) {
         if (state.isFlipping || state.trialsCompleted >= 20) return;
-
         const rect = canvas.getBoundingClientRect();
         const scaleX = canvas.width / rect.width;
         const scaleY = canvas.height / rect.height;
@@ -208,11 +216,8 @@
         const distLeft = Math.sqrt(Math.pow(mouseX - 200, 2) + Math.pow(mouseY - 200, 2));
         const distRight = Math.sqrt(Math.pow(mouseX - 600, 2) + Math.pow(mouseY - 200, 2));
 
-        if (distLeft <= 75) {
-            handleFlip("RW");
-        } else if (distRight <= 75) {
-            handleFlip("BG");
-        }
+        if (distLeft <= 75) handleFlip("RW");
+        else if (distRight <= 75) handleFlip("BG");
     });
 
     function handleFlip(choice) {
@@ -224,10 +229,8 @@
             state.currentLeftColor = frames % 2 ? "#bdc3c7" : "#7f8c8d";
             state.currentRightColor = frames % 2 ? "#7f8c8d" : "#bdc3c7";
             drawCoins();
-            
             if (++frames > 14) {
                 clearInterval(anim);
-                
                 if (choice === "RW") {
                     state.redWhiteChoices++;
                     state.currentLeftColor = win ? "#e84118" : "#ffffff";
@@ -237,7 +240,6 @@
                     state.currentRightColor = win ? "#fbc531" : "#1e272e";
                     state.currentLeftColor = "#7f8c8d"; 
                 }
-                
                 applyResult(win);
             }
         }, 50);
@@ -246,11 +248,9 @@
     function applyResult(win) {
         state.totalEarnings += win ? 15 : -7;
         state.trialsCompleted++;
-        
         drawCoins();
         document.getElementById('earnings-box').innerText = `Earnings: $${state.totalEarnings}`;
         state.isFlipping = false;
-
         if (state.trialsCompleted >= 20) {
             setTimeout(() => {
                 document.getElementById('earnings-box').style.display = 'none';
@@ -261,17 +261,19 @@
 
     function submitFinalData(rating) {
         showScreen('screen-thanks');
+        const payload = {
+            Participant_ID: state.participantId,
+            Framing: state.framing,
+            Red_Chosen: state.redWhiteChoices,
+            Black_Chosen: state.blackGoldChoices,
+            Final_Earnings: state.totalEarnings,
+            Rating: rating
+        };
         fetch(WEB_APP_URL, {
             method: 'POST',
             mode: 'no-cors',
-            body: JSON.stringify({
-                Participant_ID: state.participantId,
-                Framing: state.framing,
-                Red_Chosen: state.redWhiteChoices,
-                Black_Chosen: state.blackGoldChoices,
-                Final_Earnings: state.totalEarnings,
-                Rating: rating
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
         });
     }
 </script>
